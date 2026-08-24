@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0.0",
+  "metadata": {
+    "student_name": "Tran Duc Bao",
+    "student_id": "2A202601472",
+    "group_id": "B2",
+    "submitted_at": "2026-08-24T15:00:00+07:00"
+  },
+  "industry": "mobility-autonomous-driving",
+  "product_context": {
+    "product_name": "ADS Safety Operator Attention & Takeover Assistant",
+    "product_stage": "pilot",
+    "problem_statement": "Trong quá trình thử nghiệm xe tự lái (ADS) trên đường công cộng, người vận hành an toàn (safety operator) phải giám sát liên tục hệ thống tự động trong nhiều giờ; sự mất tập trung của họ có thể trì hoãn việc can thiệp khi ADS cần được tiếp quản, dẫn đến va chạm nghiêm trọng.",
+    "target_users": ["safety operator", "test operations supervisor"],
+    "value_hypothesis": "Giám sát mức độ tập trung theo thời gian thực và cảnh báo takeover có cấu trúc giúp rút ngắn thời gian phản ứng của operator và giảm số lần bỏ lỡ can thiệp do mất tập trung, mà không loại bỏ trách nhiệm giám sát của con người.",
+    "in_scope": ["giám sát gaze/attention của operator qua camera trong cabin", "cảnh báo takeover-request có cấu trúc khi ADS cần chuyển quyền điều khiển", "ghi log sự kiện mất tập trung để review sau chuyến đi"],
+    "non_goals": ["loại bỏ hoàn toàn safety operator con người", "tự động điều khiển thay operator khi có cảnh báo", "dự đoán lỗi nhận thức (perception) của ADS"],
+    "user_journey_moment": "Trong chuyến đi test trên tuyến đường khép kín hoặc đường công cộng, ngay trước và trong lúc xảy ra một sự kiện takeover-request từ ADS",
+    "target_launch_or_review_date": "2027-03-01",
+    "automation_level": "decision-support",
+    "fallback_experience": "Nếu hệ thống giám sát không khả dụng hoặc độ tin cậy thấp, xe test chuyển sang chế độ chỉ lái thủ công (manual-drive-only) với một quan sát viên thứ hai ngồi trong xe; việc thử nghiệm ADS trên đường công cộng bị tạm dừng cho đến khi hệ thống được khôi phục.",
+    "decision_reversibility": "hard-to-reverse"
+  },
+  "system_profile": {
+    "purpose": "Giám sát mức độ tập trung của safety operator trong quá trình lái thử ADS trên đường và phát cảnh báo có cấu trúc khi operator cần tiếp quản điều khiển xe từ hệ thống tự động.",
+    "user_groups": ["safety operator", "test operations supervisor", "safety/compliance reviewer"],
+    "decision_impact": "Hệ thống không tự lái xe hay ra quyết định điều khiển; nó ảnh hưởng đến việc operator có được nhắc tiếp quản đúng lúc hay không, và tạo ra bản ghi sự kiện dùng để review sau sự cố cũng như quyết định đào tạo lại/kỷ luật operator.",
+    "data_types": ["video camera/gaze trong cabin", "tín hiệu sinh trắc học về mức độ tập trung", "dữ liệu telemetry của xe", "trạng thái/độ tin cậy của hệ thống ADS", "log sự kiện takeover"],
+    "deployment_context": "Một công ty phát triển ADS vận hành đội xe test có safety operator được cấp phép, chạy trên đường công cộng theo giấy phép thử nghiệm của cơ quan quản lý giao thông.",
+    "target_markets": ["Vietnam", "European Union"],
+    "system_boundary": {
+      "model": "mô hình phát hiện gaze/mức độ tập trung kết hợp logic cảnh báo takeover dựa trên luật (rule-based)",
+      "application": "giao diện giám sát operator trong xe và dashboard review tại trung tâm vận hành",
+      "people": ["safety operator", "test operations supervisor", "AV safety/compliance reviewer", "người đi bộ và người tham gia giao thông khác trong khu vực test"],
+      "vendors": ["nhà cung cấp camera/cảm biến giám sát người lái", "nhà cung cấp nền tảng ADS"],
+      "upstream_inputs": ["luồng cảm biến trong cabin", "tín hiệu trạng thái/độ tin cậy của ADS", "định nghĩa tuyến đường/ODD (operational design domain)"],
+      "downstream_decisions": ["phát cảnh báo takeover", "ghi log sự kiện mất tập trung để review", "gắn cờ operator cần đào tạo lại", "tạm dừng vận hành thử nghiệm xe"]
+    }
+  },
+  "industry_risk_snapshot": {
+    "harm_severity": 5,
+    "high_stakes": 5,
+    "sensitive_data": 3,
+    "affected_scale": 3,
+    "human_review_need": 5,
+    "rationale": "Theo SRC-01 (điều tra NTSB), việc safety operator không giám sát kịp thời hệ thống ADS đã dẫn đến một người đi bộ tử vong — harm_severity và high_stakes ở mức cao nhất vì liên quan tính mạng người không phải user/customer. sensitive_data ở mức trung bình vì hệ thống thu thập dữ liệu sinh trắc học/gaze của operator (nhạy cảm nhưng phạm vi hẹp, không phải dữ liệu y tế/tài chính công chúng). affected_scale ở mức trung bình vì giới hạn trong đội xe test và khu vực thử nghiệm, chưa ở quy mô sản xuất đại trà như robo-taxi công cộng (SRC-02). human_review_need ở mức cao nhất vì đây chính là control an toàn cốt lõi của sản phẩm: nếu operator không được cảnh báo và can thiệp kịp thời, hậu quả không thể đảo ngược."
+  },
+  "legal_classification": {
+    "vietnam": {
+      "status": "uncertain-requires-legal-review",
+      "rationale": "Theo SRC-04, Luật AI Việt Nam (134/2025/QH15) có hiệu lực từ 2026-03-01, nhưng trang metadata không nêu cụ thể cách luật áp dụng cho hệ thống AI trong lĩnh vực giao thông/xe tự hành. Cần đối chiếu toàn văn luật và danh mục high-risk (Decision 33/2026/QĐ-TTg) với chức năng cụ thể của sản phẩm trước khi xác định phân loại.",
+      "source_ids": ["SRC-04"]
+    },
+    "eu": {
+      "status": "uncertain-requires-legal-review",
+      "rationale": "Theo SRC-03, EU AI Act xếp AI safety component trong hạ tầng giao thông và AI safety component gắn trong sản phẩm (như xe) vào diện high-risk, với quy định cho hệ thống gắn trong sản phẩm áp dụng từ tháng 8/2028. Tuy nhiên việc hệ thống giám sát/cảnh báo takeover-request của operator có được tính là 'safety component' theo Annex I/III hay không cần phân tích pháp lý cụ thể, chưa được xác nhận ở đây.",
+      "source_ids": ["SRC-03"]
+    },
+    "other_markets": "not assessed",
+    "legal_review_required": true
+  },
+  "product_metrics": {
+    "success_kpi": "Thời gian phản ứng trung vị của operator từ lúc có cảnh báo takeover đến khi tiếp quản điều khiển giảm xuống dưới 1.5 giây trong vòng 2 quý sau pilot.",
+    "risk_kri": "Tỷ lệ sự kiện mất tập trung (distraction event) không được operator xử lý trong ngưỡng thời gian an toàn giữ ở mức dưới 0.5% tổng số cảnh báo takeover mỗi tháng.",
+    "guardrail_metric": "Số vụ va chạm liên quan đến chậm trễ takeover do mất tập trung của operator phải bằng 0 trong mọi kỳ báo cáo vận hành; vượt ngưỡng này lập tức dừng thử nghiệm trên đường công cộng.",
+    "review_cadence": "Review hàng tháng, và bắt buộc review ngay khi có sự cố an toàn, thay đổi tuyến đường/ODD, thay đổi nhà cung cấp cảm biến, hoặc mở rộng sang thị trường mới."
+  },
+  "release_decision": {
+    "accountable_product_owner": "AV Test Operations Product Owner",
+    "risk_acceptance_owner": "Head of Autonomous Vehicle Safety",
+    "independent_reviewer": "Responsible AI / Safety Review Board",
+    "decision": "conditional-go",
+    "release_blockers": ["GAP-01: Chưa hoàn tất đánh giá pháp lý độc lập cho Việt Nam và EU về phân loại hệ thống"],
+    "release_conditions": ["luôn có safety operator con người chịu trách nhiệm cuối cùng, hệ thống chỉ hỗ trợ cảnh báo", "guardrail metric va chạm do chậm takeover bằng 0 được giám sát liên tục", "có quy trình dừng thử nghiệm ngay khi vượt ngưỡng KRI"],
+    "next_review_trigger": "Review khi có sự cố an toàn, khi vượt ngưỡng KRI/guardrail, khi thay đổi tuyến đường/ODD hoặc nhà cung cấp, hoặc chậm nhất vào 2027-02-01 trước ngày target launch.",
+    "residual_risk_rationale": "Hệ thống chỉ đóng vai trò hỗ trợ quyết định (decision-support), không tự lái xe; safety operator vẫn là người chịu trách nhiệm tiếp quản cuối cùng. Rủi ro tồn dư được giới hạn qua fallback về chế độ manual-drive-only, guardrail va chạm bằng 0, và dừng vận hành ngay khi vượt ngưỡng cảnh báo, nhưng vẫn cần review pháp lý độc lập trước khi mở rộng automation_level hoặc quy mô đội xe."
+  }
+}
